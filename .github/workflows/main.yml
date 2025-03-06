@@ -1,0 +1,54 @@
+name: Build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs: 
+  build:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { system: 24.04 }
+          - { system: devel }
+
+    steps:
+    - uses: actions/setup-python@main
+      with:
+          python-version: 3.12
+
+    - name: 'Update system to devel'
+      if: ${{ matrix.system == 'devel' }}
+      run: |
+        sudo sed -i 's/noble/devel/g' /etc/apt/sources.list.d/ubuntu.sources
+
+    - name: 'Install software packages'
+      run: |
+        sudo apt update
+        sudo apt full-upgrade
+        sudo apt install mono-complete gcc-arm-linux-gnueabihf gcc-aarch64-linux-gnu
+
+    - uses: actions/checkout@main
+      with: 
+          submodules: 'true'
+
+    - name: 'Build ${{ matrix.arch }}'
+      env:
+        GCC_ARM_PREFIX: '/usr/bin/arm-linux-gnueabihf-'
+        GCC5_AARCH64_PREFIX: '/usr/bin/aarch64-linux-gnu-'
+      run: |
+        pip install --upgrade -r pip-requirements.txt
+        python MultiFlavorBuild.py --setup -a ARM,AARCH64 TOOL_CHAIN_TAG=GCC5
+        python MultiFlavorBuild.py --update -a ARM,AARCH64 TOOL_CHAIN_TAG=GCC5
+        python MultiFlavorBuild.py -a ARM,AARCH64 TOOL_CHAIN_TAG=GCC5
+
+    - name: 'Upload artifact'
+      if: ${{ always() }}
+      uses: actions/upload-artifact@main
+      with:
+        name: ${{ format('{0} {1} (Ubuntu {2} Build)', matrix.platform, matrix.target, matrix.system) }}
+        path:  ${{ github.workspace }}/Build
+        compression-level: 9

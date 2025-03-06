@@ -24,6 +24,7 @@ jobs:
       if: ${{ matrix.system == 'devel' }}
       run: |
         sudo sed -i 's/noble/devel/g' /etc/apt/sources.list.d/ubuntu.sources
+        sudo apt-mark hold cloud-init-base
 
     - name: 'Install software packages'
       run: |
@@ -37,7 +38,7 @@ jobs:
 
     - name: 'Build ${{ matrix.arch }}'
       env:
-        GCC_ARM_PREFIX: '/usr/bin/arm-linux-gnueabihf-'
+        GCC5_ARM_PREFIX: '/usr/bin/arm-linux-gnueabihf-'
         GCC5_AARCH64_PREFIX: '/usr/bin/aarch64-linux-gnu-'
       run: |
         pip install --upgrade -r pip-requirements.txt
@@ -49,6 +50,6 @@ jobs:
       if: ${{ always() }}
       uses: actions/upload-artifact@main
       with:
-        name: ${{ format('{0} {1} (Ubuntu {2} Build)', matrix.platform, matrix.target, matrix.system) }}
+        name: ${{ format('(Ubuntu {0} Build)', matrix.system) }}
         path:  ${{ github.workspace }}/Build
         compression-level: 9

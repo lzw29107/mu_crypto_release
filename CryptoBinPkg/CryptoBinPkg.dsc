@@ -213,7 +213,7 @@
       FILE_GUID = $(SMM_CRYPTO_DRIVER_FILE_GUID)
   }
 
-[Components.IA32, Components.X64, Components.AARCH64]
+[Components.IA32, Components.X64, Components.ARM, Components.AARCH64]
   CryptoBinPkg/Driver/CryptoPei.inf {
     <Defines>
       FILE_GUID = $(PEI_CRYPTO_DRIVER_FILE_GUID)

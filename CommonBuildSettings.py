@@ -23,7 +23,7 @@ class CommonPlatform():
     '''
     BaseName = "CryptoBin"
     PackagesSupported = ("CryptoBinPkg",)
-    ArchSupported = ("IA32", "X64", "AARCH64")
+    ArchSupported = ("IA32", "X64", "ARM", "AARCH64")
     TargetsSupported = ("DEBUG", "RELEASE")
     Scopes = ('cryptobin', 'edk2-build')
     # TODO: Maybe load this from the supported flavors in MU_BASECORE\CryptoPkg\Driver\Packaging modules?

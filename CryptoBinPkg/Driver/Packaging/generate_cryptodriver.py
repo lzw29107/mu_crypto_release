@@ -696,8 +696,7 @@ def generate_platform_files(edk2_crypto_ver: str = "1.0"):
         verbose = False
     flavors = get_flavors()
     phases = ["Pei", "Dxe", "RuntimeDxe", "Smm", "StandaloneMm_MmSupv", "StandaloneMm"]
-    # Arm is currently disabled
-    arches = ["X64", "AARCH64", "IA32", ]  # "ARM"
+    arches = ["X64", "AARCH64", "IA32", "ARM"]
     targets = ["DEBUG", "RELEASE"]
 
     # first we need to generate the INF files
@@ -706,8 +705,6 @@ def generate_platform_files(edk2_crypto_ver: str = "1.0"):
         for phase in phases:
             for target in targets:
                 for arch in arches:
-                    if arch == "ARM":
-                        continue
                     if arch in ["ARM","AARCH64"] and phase == "Smm":
                         continue
                     if arch in ["ARM","IA32"] and "StandaloneMm" in phase:

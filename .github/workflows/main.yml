@@ -99,7 +99,7 @@ jobs:
           submodules: 'true'
 
     - name: 'Download artifacts'
-      uses: download-artifact@main
+      uses: actions/download-artifact@main
 
     - name: 'Build'
       run: |

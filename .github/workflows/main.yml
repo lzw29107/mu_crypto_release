@@ -101,6 +101,7 @@ jobs:
     - name: 'Download artifacts'
       uses: actions/download-artifact@main
       with:
+        path:  ${{ github.workspace }}/Build
         merge-multiple: true
 
     - name: 'Build'

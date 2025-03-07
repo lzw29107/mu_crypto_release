@@ -51,6 +51,34 @@ jobs:
       if: ${{ always() }}
       uses: actions/upload-artifact@main
       with:
-        name: ${{ format('(Ubuntu {0} Build)', matrix.system) }}
+        name: ${{ format('ARM,AARCH64 (Ubuntu {0} Build)', matrix.system) }}
         path:  ${{ github.workspace }}/Build
+        compression-level: 9
+
+  build_windows:
+    runs-on: windows-2025
+    strategy:
+      fail-fast: false
+
+    steps:
+    - uses: actions/setup-python@main
+      with:
+          python-version: 3.12
+
+    - uses: actions/checkout@main
+      with: 
+          submodules: 'true'
+
+    - name: 'Build ${{ matrix.arch }}'
+      run: |
+        pip install --upgrade -r pip-requirements.txt
+        python MultiFlavorBuild.py --setup -a IA32,X64
+        python MultiFlavorBuild.py --update -a IA32,X64
+        python MultiFlavorBuild.py -a IA32,X64
+
+    - name: 'Upload artifact'
+      uses: actions/upload-artifact@main
+      with:
+        name: 'IA32_X64'
+        path:  ${{ github.workspace }}\Build
         compression-level: 9

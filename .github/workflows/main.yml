@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs: 
-  build:
+  build_arm:
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
@@ -37,7 +37,7 @@ jobs:
       with: 
           submodules: 'true'
 
-    - name: 'Build ${{ matrix.arch }}'
+    - name: 'Build'
       env:
         GCC5_ARM_PREFIX: '/usr/bin/arm-linux-gnueabihf-'
         GCC5_AARCH64_PREFIX: '/usr/bin/aarch64-linux-gnu-'
@@ -55,7 +55,7 @@ jobs:
         path:  ${{ github.workspace }}/Build
         compression-level: 9
 
-  build_windows:
+  build_x86:
     runs-on: windows-2025
     strategy:
       fail-fast: false
@@ -69,7 +69,7 @@ jobs:
       with: 
           submodules: 'true'
 
-    - name: 'Build ${{ matrix.arch }}'
+    - name: 'Build'
       run: |
         pip install --upgrade -r pip-requirements.txt
         python MultiFlavorBuild.py --setup -a IA32,X64
@@ -81,4 +81,38 @@ jobs:
       with:
         name: 'IA32_X64'
         path:  ${{ github.workspace }}\Build
+        compression-level: 9
+
+  bundle:
+    needs: [build_arm, build_x86]
+    runs-on: windows-2025
+    strategy:
+      fail-fast: false
+
+    steps:
+    - uses: actions/setup-python@main
+      with:
+          python-version: 3.12
+
+    - uses: actions/checkout@main
+      with: 
+          submodules: 'true'
+
+    - name: 'Download artifacts'
+      uses: download-artifact@main
+
+    - name: 'Build'
+      run: |
+        ls
+        ls Build
+        pip install --upgrade -r pip-requirements.txt
+        python MultiFlavorBuild.py --setup
+        python MultiFlavorBuild.py --update
+        python MultiFlavorBuild.py --bundle
+
+    - name: 'Upload artifact'
+      uses: actions/upload-artifact@main
+      with:
+        name: 'Bundle'
+        path:  ${{ github.workspace }}\Bundle
         compression-level: 9

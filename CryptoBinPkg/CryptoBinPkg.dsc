@@ -278,7 +278,7 @@ MSFT:RELEASE_*_*_NASM_FLAGS = -g
   MSFT:*_*_IA32_DLINK_FLAGS = /ALIGN:4096 # enable 4k alignment for MAT and other protections.
   MSFT:*_*_X64_DLINK_FLAGS = /ALIGN:4096 # enable 4k alignment for MAT and other protections.
 
-[BuildOptions.ARM.EDKII.PEIM, BuildOptions.ARM.EDKII.DXE_DRIVER, BuildOptions.ARM.EDKII.MM_STANDALONE, BuildOptions.AARCH64.EDKII.PEIM, BuildOptions.AARCH64.EDKII.DXE_DRIVER, BuildOptions.AARCH64.EDKII.MM_STANDALONE]
+[BuildOptions.AARCH64.EDKII.PEIM, BuildOptions.AARCH64.EDKII.DXE_DRIVER, BuildOptions.AARCH64.EDKII.MM_STANDALONE]
   GCC:*_*_*_DLINK_FLAGS = -z common-page-size=0x1000
 
 [BuildOptions.AARCH64.EDKII.MM_STANDALONE]

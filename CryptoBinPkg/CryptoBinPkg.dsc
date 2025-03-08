@@ -281,8 +281,5 @@ MSFT:RELEASE_*_*_NASM_FLAGS = -g
 [BuildOptions.ARM.EDKII.PEIM, BuildOptions.ARM.EDKII.DXE_DRIVER, BuildOptions.ARM.EDKII.MM_STANDALONE, BuildOptions.AARCH64.EDKII.PEIM, BuildOptions.AARCH64.EDKII.DXE_DRIVER, BuildOptions.AARCH64.EDKII.MM_STANDALONE]
   GCC:*_*_*_DLINK_FLAGS = -z common-page-size=0x1000
 
-[BuildOptions.ARM.EDKII.MM_STANDALONE]
-  GCC:*_*_*_CC_FLAGS = -fno-stack-protector -march=armv7-a
-
 [BuildOptions.AARCH64.EDKII.MM_STANDALONE]
   GCC:*_*_*_CC_FLAGS = -mstrict-align -march=armv8-a

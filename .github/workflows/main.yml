@@ -55,6 +55,14 @@ jobs:
         path:  ${{ github.workspace }}/Bundle
         compression-level: 9
 
+- name: 'Upload artifact'
+      if: ${{ always() }}
+      uses: actions/upload-artifact@main
+      with:
+        name: ${{ format('ARM,AARCH64 (Ubuntu {0} Build) logs', matrix.system) }}
+        path:  ${{ github.workspace }}/Build
+        compression-level: 9
+
   build_x86:
     runs-on: windows-2025
     strategy:

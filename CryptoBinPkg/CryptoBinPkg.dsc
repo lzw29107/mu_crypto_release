@@ -229,6 +229,19 @@
       FILE_GUID = $(RUNTIMEDXE_CRYPTO_DRIVER_FILE_GUID)
   }
 
+  CryptoBinPkg/Driver/CryptoStandaloneMm.inf {
+    <Defines>
+      FILE_GUID = $(STANDALONEMM_CRYPTO_DRIVER_FILE_GUID)
+    <LibraryClasses>
+      MmServicesTableLib|MdePkg/Library/StandaloneMmServicesTableLib/StandaloneMmServicesTableLib.inf
+      StandaloneMmDriverEntryPoint|MdePkg/Library/StandaloneMmDriverEntryPoint/StandaloneMmDriverEntryPoint.inf
+    <PcdsFixedAtBuild>
+      # MM environment only set up the exception handler for the upper 32 entries.
+      # The platform should set this to a non-conflicting exception number, otherwise
+      # it will be treated as one of the normal types of CPU faults.
+      gEfiMdePkgTokenSpaceGuid.PcdStackCookieExceptionVector|0x0F
+  }
+
 [Components.X64]
   # Note: MmSupervisorPkg/Library/StandaloneMmDriverEntryPoint/StandaloneMmDriverEntryPoint.inf has instructions
   #       that are not supported in 32-bit. Only 64-bit is practically needed, so only build for 64-bit here.
@@ -238,21 +251,6 @@
     <LibraryClasses>
       MmServicesTableLib|MmSupervisorPkg/Library/StandaloneMmServicesTableLib/StandaloneMmServicesTableLib.inf
       StandaloneMmDriverEntryPoint|MmSupervisorPkg/Library/StandaloneMmDriverEntryPoint/StandaloneMmDriverEntryPoint.inf
-    <PcdsFixedAtBuild>
-      # MM environment only set up the exception handler for the upper 32 entries.
-      # The platform should set this to a non-conflicting exception number, otherwise
-      # it will be treated as one of the normal types of CPU faults.
-      gEfiMdePkgTokenSpaceGuid.PcdStackCookieExceptionVector|0x0F
-  }
-
-[Components.AARCH64, Components.X64]
-  # Note: Only 64-bit is practically needed, so only build for 64-bit here.
-  CryptoBinPkg/Driver/CryptoStandaloneMm.inf {
-    <Defines>
-      FILE_GUID = $(STANDALONEMM_CRYPTO_DRIVER_FILE_GUID)
-    <LibraryClasses>
-      MmServicesTableLib|MdePkg/Library/StandaloneMmServicesTableLib/StandaloneMmServicesTableLib.inf
-      StandaloneMmDriverEntryPoint|MdePkg/Library/StandaloneMmDriverEntryPoint/StandaloneMmDriverEntryPoint.inf
     <PcdsFixedAtBuild>
       # MM environment only set up the exception handler for the upper 32 entries.
       # The platform should set this to a non-conflicting exception number, otherwise
@@ -280,8 +278,11 @@ MSFT:RELEASE_*_*_NASM_FLAGS = -g
   MSFT:*_*_IA32_DLINK_FLAGS = /ALIGN:4096 # enable 4k alignment for MAT and other protections.
   MSFT:*_*_X64_DLINK_FLAGS = /ALIGN:4096 # enable 4k alignment for MAT and other protections.
 
-[BuildOptions.AARCH64.EDKII.PEIM, BuildOptions.AARCH64.EDKII.DXE_DRIVER, BuildOptions.AARCH64.EDKII.MM_STANDALONE]
+[BuildOptions.ARM.EDKII.PEIM, BuildOptions.ARM.EDKII.DXE_DRIVER, BuildOptions.ARM.EDKII.MM_STANDALONE, BuildOptions.AARCH64.EDKII.PEIM, BuildOptions.AARCH64.EDKII.DXE_DRIVER, BuildOptions.AARCH64.EDKII.MM_STANDALONE]
   GCC:*_*_*_DLINK_FLAGS = -z common-page-size=0x1000
+
+[BuildOptions.ARM.EDKII.MM_STANDALONE]
+  GCC:*_*_*_CC_FLAGS = -fno-stack-protector -march=armv7-a
 
 [BuildOptions.AARCH64.EDKII.MM_STANDALONE]
   GCC:*_*_*_CC_FLAGS = -mstrict-align -march=armv8-a

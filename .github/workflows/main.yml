@@ -45,14 +45,14 @@ jobs:
         pip install --upgrade -r pip-requirements.txt
         python MultiFlavorBuild.py --setup -a ARM,AARCH64 TOOL_CHAIN_TAG=GCC5
         python MultiFlavorBuild.py --update -a ARM,AARCH64 TOOL_CHAIN_TAG=GCC5
-        python MultiFlavorBuild.py -a ARM,AARCH64 TOOL_CHAIN_TAG=GCC5
+        python MultiFlavorBuild.py --bundle -a ARM,AARCH64 TOOL_CHAIN_TAG=GCC5
 
     - name: 'Upload artifact'
       if: ${{ always() }}
       uses: actions/upload-artifact@main
       with:
         name: ${{ format('ARM,AARCH64 (Ubuntu {0} Build)', matrix.system) }}
-        path:  ${{ github.workspace }}/Build
+        path:  ${{ github.workspace }}/Bundle
         compression-level: 9
 
   build_x86:
@@ -74,13 +74,13 @@ jobs:
         pip install --upgrade -r pip-requirements.txt
         python MultiFlavorBuild.py --setup -a IA32,X64
         python MultiFlavorBuild.py --update -a IA32,X64
-        python MultiFlavorBuild.py -a IA32,X64
+        python MultiFlavorBuild.py --bundle -a IA32,X64
 
     - name: 'Upload artifact'
       uses: actions/upload-artifact@main
       with:
         name: 'IA32_X64'
-        path:  ${{ github.workspace }}\Build
+        path:  ${{ github.workspace }}\Bundle
         compression-level: 9
 
   bundle:
@@ -90,28 +90,11 @@ jobs:
       fail-fast: false
 
     steps:
-    - uses: actions/setup-python@main
-      with:
-          python-version: 3.12
-
-    - uses: actions/checkout@main
-      with: 
-          submodules: 'true'
-
     - name: 'Download artifacts'
       uses: actions/download-artifact@main
       with:
-        path:  ${{ github.workspace }}/Build
+        path:  ${{ github.workspace }}\Bundle
         merge-multiple: true
-
-    - name: 'Build'
-      run: |
-        ls
-        ls Build
-        pip install --upgrade -r pip-requirements.txt
-        python MultiFlavorBuild.py --setup
-        python MultiFlavorBuild.py --update
-        python MultiFlavorBuild.py --bundle
 
     - name: 'Upload artifact'
       uses: actions/upload-artifact@main

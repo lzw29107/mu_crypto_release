@@ -874,11 +874,9 @@ def generate_platform_files(edk2_crypto_ver: str = "1.0"):
         comp_types = get_supported_library_types(phase)
         upper_phase = phase.upper()
         for arch in arches:
-            if arch in ["ARM","IA32"] and "StandaloneMm" in phase:
-                continue
             if arch in ["ARM","AARCH64"] and phase == "Smm":
                 continue
-            if arch == "AARCH64" and phase == "StandaloneMm_MmSupv":
+            if arch in ["ARM","AARCH64","IA32"] and phase == "StandaloneMm_MmSupv":
                 continue
             dsc_lines.append(f"!if $({upper_phase}_CRYPTO_ARCH) == {arch}")
             lib_class_str = ", ".join(map(lambda x: ".".join(

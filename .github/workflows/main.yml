@@ -45,6 +45,7 @@ jobs:
         pip install --upgrade -r pip-requirements.txt
         python MultiFlavorBuild.py --setup -a ARM,AARCH64 TOOL_CHAIN_TAG=GCC5
         python MultiFlavorBuild.py --update -a ARM,AARCH64 TOOL_CHAIN_TAG=GCC5
+        python CryptoBinPkg/Driver/Packaging/generate_cryptodriver.py
         python MultiFlavorBuild.py --bundle -a ARM,AARCH64 TOOL_CHAIN_TAG=GCC5
 
     - name: 'Upload artifact'
@@ -74,6 +75,7 @@ jobs:
         pip install --upgrade -r pip-requirements.txt
         python MultiFlavorBuild.py --setup -a IA32,X64
         python MultiFlavorBuild.py --update -a IA32,X64
+        python CryptoBinPkg/Driver/Packaging/generate_cryptodriver.py
         python MultiFlavorBuild.py --bundle -a IA32,X64
 
     - name: 'Upload artifact'
